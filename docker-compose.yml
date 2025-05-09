@@ -1,0 +1,7 @@
+services:
+  opensw_django:
+    build:
+      context: .  
+      dockerfile: Dockerfile
+    ports:
+      - "9000:8000"

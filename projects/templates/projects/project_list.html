@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>프로젝트 목록</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'project/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 id="main-title">프로젝트 목록</h1>
+            <p class="subtitle">생성된 프로젝트들을 확인하세요.</p>
+        </header>
+        <section id="project-section">
+            {% if project_list %}
+            <ul class="project-list">
+                {% for project in project_list %}
+                <div class="project-item">
+                    <a class="project-link" href="{% url 'project:project_detail' project.pk %}">
+                        {{ project.project_name }}
+                    </a>
+                    <p>
+                        {% for member in project.members.all %}
+                        {{ member.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                        No members
+                        {% endfor %}
+                    </p>
+
+                </div>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="no-element">현재 등록된 프로젝트가 없습니다.</p>
+            {% endif %}
+        </section>
+        <footer class="back-footer">
+            <a href="{% url 'project:index' %}" class="back-link">
+                <button class="back-button">← 인덱스 페이지로 돌아가기</button>
+            </a>
+        </footer>
+    </div>
+</body>
+
+</html>

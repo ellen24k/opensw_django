@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Project</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'project/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="project-header">
+            <h1 class="project-title">프로젝트 수정</h1>
+            <p class="project-description">프로젝트 정보를 수정하고 저장하세요.</p>
+        </header>
+
+        <section>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <p>프로젝트 이름: {{ form.project_name }}</p>
+                <p>프로젝트 설명: {{ form.description }}</p>
+
+                <div id="member-list">
+                    <label>멤버:</label>
+
+                    {% if all_members %}
+                    {% for member in all_members %}
+                    <input type="checkbox" name="members" value="{{ member.pk }}" {% if member in project.members.all %}checked{% endif %}>
+                    {{ member.name }}
+                    {% endfor %}
+                    {% else %}
+                    <p>등록된 멤버가 없습니다.</p>
+                    {% endif %}
+
+                </div>
+
+                <button type="submit" class="submit-button">저장하기</button>
+            </form>
+        </section>
+
+        <footer class="back-footer">
+            <a href="{% url 'project:manager' %}" class="back-link">
+                <button class="back-button">← 관리자 페이지로 돌아가기</button>
+            </a>
+        </footer>
+    </div>
+</body>
+
+</html>

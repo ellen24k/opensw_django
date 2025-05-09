@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Members</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'project/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="project-header">
+            <h1 class="project-title">멤버 관리 페이지</h1>
+        </header>
+
+        <!-- 사용자 리스트 -->
+        <section>
+            <h2 class="section-title">기존 멤버</h2>
+            {% if all_members %}
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>멤버 이름</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in all_members %}
+                    <tr>
+                        <td>{{ member.name }}</td>
+                        <td>
+                            <form method="post" action="{% url 'project:member_delete' member.pk %}"
+                                class="inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="danger-button">삭제하기</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-element">등록된 멤버가 없습니다.</p>
+            {% endif %}
+        </section>
+        
+        <!-- 사용자 추가 -->
+        <section>
+            <h2 class="section-title">새 멤버 추가</h2>
+            <div class="form-container">
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="name">멤버 이름:</label>
+                    <input type="text" id="name" name="name" required>
+                    <button type="submit" class="add-button">멤버 추가하기</button>
+                </form>
+            </div>
+        </section>
+
+        <footer class="back-footer">
+            <a href="{% url 'project:manager' %}" class="back-link">
+                <button class="back-button">← 관리자 페이지로 돌아가기</button>
+            </a>
+        </footer>
+    </div>
+</body>
+
+</html>

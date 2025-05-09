@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ project.project_name }} - Project Detail</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'project/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="project-header">
+            <h1 class="project-title">{{ project.project_name }}</h1>
+            <p class="project-description">{{ project.description }}</p>
+            <p class="project-members"><strong>멤버:</strong>
+                {% if project.members.all %}
+                {% for member in project.members.all %}
+                {{ member.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% else %}
+                등록된 멤버가 없습니다.
+                {% endif %}
+            </p>
+        </header>
+
+        <section class="vote-section">
+            <h2 class="vote-title">프로젝트 평가하기 (1 ~ 5점 사이):</h2>
+            <form id="vote-form" class="vote-form" data-project-id="{{ project.pk}}">
+                {% csrf_token %}
+                <div class="vote-options">
+                    {% for i in "12345" %}
+                    <div class="vote-option">
+                        <input type="radio" name="vote" id="vote_{{ i }}" value="{{ i }}">
+                        <label for="vote_{{ i }}">{{ i }} 점</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="submit-button">투표하기</button>
+            </form>
+        </section>
+
+        <footer class="back-footer">
+            <a href="{% url 'project:project_list' %}" class="back-link">
+                <button class="back-button">← 프로젝트 목록 페이지로 돌아가기</button>
+            </a>
+        </footer>
+    </div>
+    <script>
+        function showToast(message, success = true) {
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            if (success) {
+                toast.style.backgroundColor = 'green'; // 성공 메시지는 초록색
+            } else {
+                toast.style.backgroundColor = 'red'; // 실패 메시지는 빨간색
+            }
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100); // 0.1초 뒤에 표시
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 500);
+            }, 2000); // 2초 후에 사라짐
+        }
+
+
+        document.getElementById('vote-form').addEventListener('submit', async function (e) {
+            e.preventDefault(); // 페이지 리로드 방지
+
+            const voteValue = document.querySelector('input[name="vote"]:checked');
+            if (!voteValue) {
+                showToast("별점을 선택해주세요.", false); 
+                return;
+            }
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const response = await fetch("{% url 'project:project_vote' project.pk %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({ vote: voteValue.value })
+            });
+
+            if (response.ok) {
+                showToast("투표가 완료되었습니다.", true); 
+            } else {
+                showToast("투표에 실패했습니다.", false); 
+            }
+        });
+
+    </script>
+</body>
+
+</html>

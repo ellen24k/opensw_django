@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Project Manager</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'project/style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="project-header">
+            <h1 class="project-title">프로젝트 관리자 페이지</h1>
+            <p class="project-description">평균 점수를 기준으로 순위를 확인하고 프로젝트와 멤버를 관리할 수 있습니다.</p>
+        </header>
+
+        <section id="project-section">
+            {% if project_list %}
+            <h2 class="section-title">전체 프로젝트 목록</h2>
+            <table class="project-table">
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>프로젝트 이름</th>
+                        <th>평균 점수</th>
+                        <th>투표수</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in project_list %}
+                    <tr>
+                        <td>{{ project.rank }}</td>
+                        <td>{{ project.project_name }}</td>
+                        <td>{{ project.avg_vote|floatformat:2 }}</td>
+                        <td>{{ project.vote_count }}</td>
+                        <td>
+                            <a href="{% url 'project:project_edit' project.pk %}" class="edit-link">Edit</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'project:project_remove' project.pk %}" class="remove-link">Remove</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-element">등록된 프로젝트가 없습니다.</p>
+            {% endif %}
+
+            <a href="{% url 'project:project_add' %}" class="add-link">
+                <button class="add-button">새 프로젝트 추가</button>
+            </a>
+
+            <a href="{% url 'project:member_add' %}" class="add-link">
+                <button class="add-button">멤버 관리</button>
+            </a>
+
+        </section>
+
+        <footer class="back-footer">
+            <a href="{% url 'project:index' %}" class="back-link">
+                <button class="back-button">← 인덱스 페이지로 돌아가기</button>
+            </a>
+        </footer>
+    </div>
+</body>
+
+</html>

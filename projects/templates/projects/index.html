@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>프로젝트 관리 시스템</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'project/style.css' %}">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1 id="main-title">프로젝트 관리 시스템</h1>
+      <p class="subtitle">원하는 기능을 선택하세요.</p>
+    </header>
+    <div class="index-links">
+      <a href="{% url 'project:manager' %}" class="index-button">
+        <div class="button-icon">📊</div>
+        <div class="button-text">
+          <span class="button-title">관리자 페이지</span>
+          <span class="button-desc">프로젝트 및 사용자 관리</span>
+        </div>
+      </a>
+      <a href="{% url 'project:project_list' %}" class="index-button">
+        <div class="button-icon">📁</div>
+        <div class="button-text">
+          <span class="button-title">프로젝트 목록</span>
+          <span class="button-desc">모든 프로젝트 보기</span>
+        </div>
+      </a>
+    </div>
+    <footer>
+      <p>2025 오픈소스SW기초 - 프로젝트 관리 시스템 by 김태영</p>
+    </footer>
+  </div>
+</body>
+
+</html>
